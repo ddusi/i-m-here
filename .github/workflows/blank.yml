@@ -11,6 +11,5 @@ jobs:
         uses: peter-evans/create-or-update-project-card@v1
         with:
           project-name: sprint board
-          column-name: None
-          issue-number: 1
+          column-name: To do
         
