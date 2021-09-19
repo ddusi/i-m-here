@@ -1,22 +1,84 @@
 /*global kakao*/
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import imhere from "./assets/marker.png";
 
 const Map = () => {
-  useEffect(() => {
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+  const [status, setStatus] = useState(null);
+  const [mapdata, setMapdata] = useState(null);
+
+  useEffect(async () => {
+    //지도를 담은 container
     let container = document.getElementById("map");
+    //지도 option 설정
     let options = {
-      center: new kakao.maps.LatLng(37.506502, 127.053617),
-      level: 3,
+      center: new kakao.maps.LatLng(33.450701, 126.570667),
+      level: 2,
     };
 
-    const map = new kakao.maps.Map(container, options);
+    //지도 생성, 객체 리턴
+    let map = await new kakao.maps.Map(container, options);
+    setMapdata(map);
   }, []);
+
+  // eslint-disable-next-line
+
+  const getLocation = () => {
+    if (!navigator.geolocation) {
+      setStatus("현재 브라우저에서 위치 정보가 지원되지 않습니다.");
+    } else {
+      setStatus("위치 찾는중...");
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setStatus(true);
+          setLatitude(position.coords.latitude); //위도
+          setLongitude(position.coords.longitude); //경도
+
+          let locPosition = new kakao.maps.LatLng(latitude, longitude);
+
+          displayLoc(locPosition);
+        },
+        () => {
+          setStatus("위치 정보를 가져올 수 없습니다.");
+        }
+      );
+    }
+  };
+  const displayLoc = (locPosition) => {
+    mapdata.setCenter(locPosition);
+    //마커 이미지
+    let imageSrc = `${imhere}`,
+      imageSize = new kakao.maps.Size(70, 90),
+      imageOption = { offset: new kakao.maps.Point(27, 86) };
+
+    let markerImage = new kakao.maps.MarkerImage(
+        imageSrc,
+        imageSize,
+        imageOption
+      ),
+      markerPosition = new kakao.maps.LatLng(latitude, longitude);
+
+    let marker = new kakao.maps.Marker({
+      position: markerPosition,
+      image: markerImage,
+    });
+
+    marker.setMap(mapdata);
+  };
+
+  const onLocation = () => {
+    getLocation();
+  };
 
   return (
     <>
-      <button>here</button>
-      <Maps id="map"></Maps>
+      <h3>{status}</h3>
+      <Maps id="map" />
+      <button onClick={onLocation}>여기로~</button>
+      <div>{longitude && <p>경도: {longitude}</p>}</div>
+      <div>{latitude && <p>위도: {latitude}</p>}</div>
     </>
   );
 };
@@ -24,7 +86,6 @@ const Map = () => {
 const Maps = styled.div`
   width: 400px;
   height: 400px;
-  border: 1px solid red;
 `;
 
 export default Map;
