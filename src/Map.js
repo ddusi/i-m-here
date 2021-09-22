@@ -22,7 +22,11 @@ const Map = () => {
     //지도 생성, 객체 리턴
     let map = new kakao.maps.Map(container, options);
     setMapdata(map);
-  }, []);
+
+    const locPosition = new kakao.maps.LatLng(latitude, longitude);
+    displayLoc();
+    mapdata.setCenter(locPosition);
+  }, [latitude, longitude]);
 
   // eslint-disable-next-line
 
@@ -45,7 +49,7 @@ const Map = () => {
       );
     });
   };
-  const displayLoc = (locPosition) => {
+  const displayLoc = () => {
     //마커 이미지
     let imageSrc = `${imhere}`,
       imageSize = new kakao.maps.Size(70, 90),
@@ -63,15 +67,13 @@ const Map = () => {
       image: markerImage,
     });
 
-    mapdata.setCenter(locPosition);
     marker.setMap(mapdata);
   };
 
   const onLocation = async () => {
-    console.log(latitude);
     await getLocation();
-    const locPosition = new kakao.maps.LatLng(latitude, longitude);
-    await displayLoc(locPosition);
+    // const locPosition = new kakao.maps.LatLng(latitude, longitude);
+    // await displayLoc(locPosition);
   };
 
   return (
