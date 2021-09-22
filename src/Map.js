@@ -30,26 +30,27 @@ const Map = () => {
 
   // eslint-disable-next-line
 
-  const getLocation = () => {
+  const getLocation = async () => {
     if (!navigator.geolocation) {
       setStatus("현재 브라우저에서 위치 정보가 지원되지 않습니다.");
       return;
     }
     setStatus("위치 찾는중...");
-    return new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setStatus(true);
-          setLatitude(position.coords.latitude); //위도
-          setLongitude(position.coords.longitude); //경도
-        },
-        () => {
-          setStatus("위치 정보를 가져올 수 없습니다.");
-        }
-      );
+    const position = await new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject);
     });
+
+    let lat = position.coords.latitude;
+    let lon = position.coords.longitude;
+    return {
+      lon: position.coords.longitude,
+      lat: position.coords.latitude,
+    };
   };
-  const displayLoc = () => {
+
+  const displayLoc = (latitude, longitude) => {
+    const locPosition = new kakao.maps.LatLng(latitude, longitude);
+
     //마커 이미지
     let imageSrc = `${imhere}`,
       imageSize = new kakao.maps.Size(70, 90),
@@ -71,9 +72,9 @@ const Map = () => {
   };
 
   const onLocation = async () => {
-    await getLocation();
-    // const locPosition = new kakao.maps.LatLng(latitude, longitude);
-    // await displayLoc(locPosition);
+    let { lat, lon } = await getLocation();
+    console.log(lat, lon);
+    displayLoc(lat, lon);
   };
 
   return (

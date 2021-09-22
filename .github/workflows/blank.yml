@@ -1,0 +1,15 @@
+name: Create or Update Project Card
+
+on:
+  issues:
+    types: [opened]
+jobs:
+  createCard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create or Update Project Card
+        uses: peter-evans/create-or-update-project-card@v1
+        with:
+          project-name: sprint board
+          column-name: To do
+        
