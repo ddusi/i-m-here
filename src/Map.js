@@ -1,6 +1,7 @@
 /*global kakao*/
+
 "use strict";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import imhere from "./assets/marker.png";
 
@@ -9,27 +10,33 @@ const Map = () => {
   const [longitude, setLongitude] = useState(null);
   const [status, setStatus] = useState(null);
   const [mapdata, setMapdata] = useState(null);
+  const resetRef = useRef(null);
 
   useEffect(() => {
-    //지도를 담은 container
-    let container = document.getElementById("map");
+    console.log("컴포넌트 마운트");
+    kakaoMap();
+    console.log(resetRef);
+    onLocation();
+    return () => {
+      console.log("컴포넌트가 사라짐.");
+    };
+  }, []);
+
+  const kakaoMap = () => {
+    //지도를 담은 maps
+    let maps = document.getElementById("map");
+
     //지도 option 설정
     let options = {
       center: new kakao.maps.LatLng(33.450701, 126.570667),
       level: 2,
     };
 
-    //지도 생성, 객체 리턴
-    let map = new kakao.maps.Map(container, options);
-    setMapdata(map);
-
-    const locPosition = new kakao.maps.LatLng(latitude, longitude);
-    displayLoc();
-    mapdata.setCenter(locPosition);
-  }, [latitude, longitude]);
+    //지도 생성
+    resetRef.current = new kakao.maps.Map(maps, options);
+  };
 
   // eslint-disable-next-line
-
   const getLocation = async () => {
     if (!navigator.geolocation) {
       setStatus("현재 브라우저에서 위치 정보가 지원되지 않습니다.");
@@ -42,12 +49,15 @@ const Map = () => {
 
     let lat = position.coords.latitude;
     let lon = position.coords.longitude;
+    let LatLon = [lat, lon];
+    setStatus(LatLon);
     return {
       lon: position.coords.longitude,
       lat: position.coords.latitude,
     };
   };
 
+  //좌표 위치대로 지도 변경
   const displayLoc = (latitude, longitude) => {
     const locPosition = new kakao.maps.LatLng(latitude, longitude);
 
@@ -67,10 +77,11 @@ const Map = () => {
       position: markerPosition,
       image: markerImage,
     });
-
-    marker.setMap(mapdata);
+    resetRef.current.setCenter(locPosition);
+    marker.setMap(resetRef.current);
   };
 
+  //위치 찾기 버튼
   const onLocation = async () => {
     let { lat, lon } = await getLocation();
     console.log(lat, lon);
@@ -79,11 +90,13 @@ const Map = () => {
 
   return (
     <>
-      <h3>{status}</h3>
+      <h3>
+        현재 내 위치는...
+        <br />
+        {status}
+      </h3>
       <Maps id="map" />
-      <button onClick={onLocation}>여기로~</button>
-      <div>{longitude && <p>경도: {longitude}</p>}</div>
-      <div>{latitude && <p>위도: {latitude}</p>}</div>
+      <Button onClick={onLocation}>위치 찾기</Button>
     </>
   );
 };
@@ -91,6 +104,25 @@ const Map = () => {
 const Maps = styled.div`
   width: 400px;
   height: 400px;
+  border-radius: 25px;
+  box-shadow: 3px 3px 15px #e6e6e6;
+`;
+
+const Button = styled.button`
+  background: #e3e3e3;
+  position: relative;
+  bottom: 410px;
+  left: 300px;
+  z-index: 1;
+  border: none;
+  border-radius: 1em;
+  padding: 10px 20px 10px 20px;
+  font-weight: bold;
+  box-shadow: 1px 1px 3px #e6e6e6;
+
+  &: hover {
+    background: #dbdbdb;
+  }
 `;
 
 export default Map;
