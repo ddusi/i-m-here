@@ -3,20 +3,20 @@
 "use strict";
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import imhere from "./assets/marker.png";
+import imhere from "./assets/marker1.png";
+import axios from "axios";
+import Share from "./Share";
 
 const Map = () => {
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
   const [status, setStatus] = useState(null);
-  const [mapdata, setMapdata] = useState(null);
+  const [isloading, setIsLoading] = useState(false);
+  const [mymap, setMyMap] = useState([]);
   const resetRef = useRef(null);
 
   useEffect(() => {
-    console.log("컴포넌트 마운트");
     kakaoMap();
-    console.log(resetRef);
     onLocation();
+
     return () => {
       console.log("컴포넌트가 사라짐.");
     };
@@ -42,15 +42,12 @@ const Map = () => {
       setStatus("현재 브라우저에서 위치 정보가 지원되지 않습니다.");
       return;
     }
-    setStatus("위치 찾는중...");
+    setStatus("위치 찾는중");
     const position = await new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(resolve, reject);
     });
 
-    let lat = position.coords.latitude;
-    let lon = position.coords.longitude;
-    let LatLon = [lat, lon];
-    setStatus(LatLon);
+    setStatus(null);
     return {
       lon: position.coords.longitude,
       lat: position.coords.latitude,
@@ -58,20 +55,20 @@ const Map = () => {
   };
 
   //좌표 위치대로 지도 변경
-  const displayLoc = (latitude, longitude) => {
-    const locPosition = new kakao.maps.LatLng(latitude, longitude);
+  const displayLoc = (lat, lon) => {
+    const locPosition = new kakao.maps.LatLng(lat, lon);
 
     //마커 이미지
     let imageSrc = `${imhere}`,
       imageSize = new kakao.maps.Size(70, 90),
       imageOption = { offset: new kakao.maps.Point(27, 100) };
 
-    let markerImage = new kakao.maps.MarkerImage(
+    const markerImage = new kakao.maps.MarkerImage(
         imageSrc,
         imageSize,
         imageOption
       ),
-      markerPosition = new kakao.maps.LatLng(latitude, longitude);
+      markerPosition = new kakao.maps.LatLng(lat, lon);
 
     let marker = new kakao.maps.Marker({
       position: markerPosition,
@@ -84,26 +81,33 @@ const Map = () => {
   //위치 찾기 버튼
   const onLocation = async () => {
     let { lat, lon } = await getLocation();
-    console.log(lat, lon);
     displayLoc(lat, lon);
+
+    const response = await axios.get(
+      `http://api.iam-here.site/location?x=${lon}&y=${lat}`
+    );
+    setMyMap(response.data.data);
+    setIsLoading(true);
   };
 
   return (
     <>
       <h3>
         현재 내 위치는...
+        {mymap.roadAddress} 입니다🏃‍♀️.
         <br />
-        {status}
       </h3>
+
+      {isloading && <Share mymap={mymap} />}
       <Maps id="map" />
-      <Button onClick={onLocation}>위치 찾기</Button>
     </>
   );
 };
 
 const Maps = styled.div`
-  width: 400px;
-  height: 400px;
+  margin-left: 30px;
+  width: 300px;
+  height: 450px;
   border-radius: 25px;
   box-shadow: 3px 3px 15px #e6e6e6;
 `;
