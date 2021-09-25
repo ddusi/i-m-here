@@ -12,14 +12,31 @@ const Share = ({ mymap }) => {
     <>
       {console.log(mymap.location.latitude, mymap.location.longitude)}
       <CopyToClipboard text={shareText}>
-        <Button>공유하기</Button>
+        <Button>위치 복사하기</Button>
       </CopyToClipboard>
     </>
   );
 };
 
 const Button = styled.button`
-  display: none;
+  margin-top: 40px;
+  margin-left: 55px;
+  background: #56b960;
+  width: 180px;
+  height: 66px;
+  z-index: 1;
+  border: none;
+  border-radius: 60px;
+  padding: 15px 24px 15px 24px;
+  text-decoration: none;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  text-aling: center;
+
+  &: hover {
+    background: #5ba562;
+  }
 `;
 
 export default Share;

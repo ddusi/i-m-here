@@ -6,6 +6,7 @@ import styled from "styled-components";
 import imhere from "./assets/marker1.png";
 import axios from "axios";
 import Share from "./Share";
+import "./assets/Location.css";
 
 const Map = () => {
   const [status, setStatus] = useState(null);
@@ -42,12 +43,11 @@ const Map = () => {
       setStatus("현재 브라우저에서 위치 정보가 지원되지 않습니다.");
       return;
     }
-    setStatus("위치 찾는중");
     const position = await new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(resolve, reject);
     });
 
-    setStatus(null);
+    setStatus("입니다!");
     return {
       lon: position.coords.longitude,
       lat: position.coords.latitude,
@@ -92,41 +92,66 @@ const Map = () => {
 
   return (
     <>
-      <h3>
-        현재 내 위치는...
-        {mymap.roadAddress} 입니다🏃‍♀️.
-        <br />
-      </h3>
+      <Background>
+        <Container>
+          <Title>
+            <h5>here</h5>
+            <svg
+              height="1"
+              width="249"
+              style={{ backgroundColor: "#707070" }}
+            ></svg>
+          </Title>
+          <Content>
+            <h3>
+              현재 내 위치는...🏃🏃‍♀️
+              <br />
+              {mymap.roadAddress} <br />
+              {mymap.w3w}
+              {/* {mymap.location.latitude}, {mymap.location.longitude} */}
+              <br />
+              <br />
+            </h3>
 
-      {isloading && <Share mymap={mymap} />}
-      <Maps id="map" />
+            <Maps id="map" />
+            {isloading && <Share mymap={mymap} />}
+          </Content>
+        </Container>
+      </Background>
     </>
   );
 };
 
+const Background = styled.div`
+  border: 1px solid red;
+  width: 414px;
+  height: 896px;
+  margin: 30px;
+`;
+
+const Container = styled.div`
+  margin-left: 40px;
+  margin-right: 40px;
+  margin-top: 25px;
+`;
+
+const Title = styled.div`
+  font-size: 30px;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: center;
+  font-family: "Poppins", sans-serif;
+`;
+
+const Content = styled.div`
+  margin-left: 18px;
+`;
 const Maps = styled.div`
-  margin-left: 30px;
   width: 300px;
   height: 450px;
   border-radius: 25px;
   box-shadow: 3px 3px 15px #e6e6e6;
-`;
-
-const Button = styled.button`
-  background: #e3e3e3;
-  position: relative;
-  bottom: 410px;
-  left: 300px;
-  z-index: 1;
-  border: none;
-  border-radius: 1em;
-  padding: 10px 20px 10px 20px;
-  font-weight: bold;
-  box-shadow: 1px 1px 3px #e6e6e6;
-
-  &: hover {
-    background: #dbdbdb;
-  }
+  margin-top: 10px;
 `;
 
 export default Map;

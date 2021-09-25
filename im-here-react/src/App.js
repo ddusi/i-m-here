@@ -1,10 +1,10 @@
 import React from "react";
-import Location from "./Location";
+import Routes from "./Routes";
 
 function App() {
   return (
     <div className="App">
-      <Location />
+      <Routes />
     </div>
   );
 }
