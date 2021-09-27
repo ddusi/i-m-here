@@ -84,7 +84,7 @@ const Map = () => {
     displayLoc(lat, lon);
 
     const response = await axios.get(
-      `http://api.iam-here.site/location?x=${lon}&y=${lat}`
+      `https://api.iam-here.site/location?x=${lon}&y=${lat}`
     );
     setMyMap(response.data.data);
     setIsLoading(true);
