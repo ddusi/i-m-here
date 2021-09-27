@@ -11,6 +11,7 @@
 # production
 /build
 /dist
+/.pm2
 
 # misc
 .DS_Store
