@@ -20,8 +20,8 @@ const Location = () => {
             style={{ backgroundColor: "#707070" }}
           ></svg>
         </Title>
-        <h3>안녕하세요!</h3>
-        <h2>내 위치를 찾아볼까요?</h2>
+        <SubTitle>안녕하세요!</SubTitle>
+        <MainTitle>내 위치를 찾아볼까요?</MainTitle>
         <Emoji>💁</Emoji>
         <Button to="/map">Get started</Button>
         <div class="balloon1">
@@ -43,7 +43,11 @@ const Location = () => {
 };
 
 const Background = styled.div`
-  border: 1px solid red;
+  border-radius: 30px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 3px 3px 15px #e6e6e6;
   width: 414px;
   height: 896px;
   margin: 30px;
@@ -62,6 +66,16 @@ const Title = styled.div`
   grid-template-columns: 1fr 2fr;
   align-items: center;
   font-family: "Poppins", sans-serif;
+`;
+
+const SubTitle = styled.h3`
+  margin-bottom: 3px;
+  font-size: 24px;
+`;
+
+const MainTitle = styled.h2`
+  margin-top: 0;
+  font-size: 30px;
 `;
 
 const Emoji = styled.div`

@@ -123,7 +123,11 @@ const Map = () => {
 };
 
 const Background = styled.div`
-  border: 1px solid red;
+  border-radius: 30px;
+  box-shadow: 3px 3px 15px #e6e6e6;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   width: 414px;
   height: 896px;
   margin: 30px;

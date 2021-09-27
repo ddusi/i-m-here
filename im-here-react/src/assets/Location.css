@@ -1,19 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700;800;900&display=swap");
 
-h3,
-h2 {
-  margin-bottom: 3px;
-  margin-top: 0;
-}
-
-h3 {
-  font-size: 24px;
-}
-
-h2 {
-  font-size: 30px;
-}
-
 .balloon1 {
   margin-top: 60px;
   color: black;
