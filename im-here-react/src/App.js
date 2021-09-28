@@ -6,7 +6,7 @@ function App() {
   const currentUrl = document.location.href;
   return (
     <div className="App">
-      <Helmet>
+      {/* <Helmet>
         <meta property="og:url" content={currentUrl}></meta>
         <meta property="og:title" content="Here - 내 위치 공유하기" />
         <meta
@@ -16,7 +16,7 @@ function App() {
         <meta property="og:image" content={here} />
         <title>HERE - 나 여기야</title>
         {/* <link rel="icon" href={}/> */}
-      </Helmet>
+      {/* </Helmet> */}
       <Routes />
     </div>
   );
