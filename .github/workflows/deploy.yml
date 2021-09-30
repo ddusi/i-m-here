@@ -1,39 +1,25 @@
-name: sftp-deploy
-on:
+name: remote ssh and deploy
+
+on: 
   workflow_dispatch:
   push:
     branches:
       - master
 
 jobs:
-  deploy:
-    runs-on: ubuntu-18.04
+  build:
+    name: Build
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout source code.
-        uses: actions/checkout@master
-
-      - name: Cache node modules
-        uses: actions/cache@v1
-        with:
-          path: node_modules
-          key: ${{ runner.OS }}-build-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.OS }}-build-
-            ${{ runner.OS }}-
-
-      - name: Install Dependencies
-        run: yarn install
-
-      - name: Build
-        env:
-          GENERATE_SOURCEMAP: false
-        run: yarn build
-
-      - name: Deploy
-        uses: SamKirkland/FTP-Deploy-Action@3.1.1
-        with:
-          ftp-server: ${{ secrets.FTP_HOST }}
-          ftp-username: ${{ secrets.FTP_USERNAME }}
-          ftp-password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ../im-here-react/dist/
-          git-ftp-args: --insecure
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script_stop: true
+        script: |
+          cd /home/ubuntu/im-here/im-here-react;
+          yarn install;
+          yarn build;
