@@ -87,7 +87,7 @@ const Button = styled.div`
   vertical-align: middle;
 
   &: hover {
-    background: #5ba562;
+    background: #454545;
   }
 `;
 

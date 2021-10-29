@@ -40,9 +40,10 @@ const Button = styled.button`
   font-size: 20px;
   font-weight: bold;
   text-align: center;
+  cursor: pointer;
 
   &: hover {
-    background: #5ba562;
+    background: #454545;
   }
 `;
 
@@ -53,6 +54,7 @@ const Button_share = styled.button`
   background: #d5d5d5;
   border: none;
   margin-left: 5px;
+  cursor: pointer;
 `;
 
 export default Share;
